@@ -5,10 +5,10 @@
   "manufacturer": "FSR",
   "model": "Flex-LT",
   "buildUrls": {
-    "linux": "",
-    "mac": "",
-    "armv7": "",
-    "windows": ""
+    "linux": "https://s3.eu-central-1.amazonaws.com/catch-connect-services/656da4e6-8afb-4ed8-9f01-2854253512e3-0.0.1-linux-0.0.1-linux.ccs",
+    "mac": "https://s3.eu-central-1.amazonaws.com/catch-connect-services/656da4e6-8afb-4ed8-9f01-2854253512e3-0.0.1-mac.ccs",
+    "armv7": "https://s3.eu-central-1.amazonaws.com/catch-connect-services/656da4e6-8afb-4ed8-9f01-2854253512e3-0.0.1-armv7.ccs",
+    "windows": "https://s3.eu-central-1.amazonaws.com/catch-connect-services/656da4e6-8afb-4ed8-9f01-2854253512e3-0.0.1-win.ccs.exe"
   },
   "parameters": [
     {
@@ -244,7 +244,7 @@
       ]
     },
     {
-      "friendlyName": "Sample Got To Screen Command",
+      "friendlyName": "Sample GoTo Screen Command",
       "editable": true,
       "pattern": "action = GoTo 1",
       "useHex": false,
