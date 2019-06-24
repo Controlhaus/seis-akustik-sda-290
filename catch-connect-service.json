@@ -1,0 +1,1424 @@
+{
+  "version": "0.1.0",
+  "friendlyName": "Seis Akustik SDA290 Digital Matrix Amplifier",
+  "serviceName": "sda290",
+  "manufacturer": "Seis Akustik GmbH",
+  "model": "SDA290",
+  "buildUrls": {
+    "linux": "",
+    "mac": "https://s3.eu-central-1.amazonaws.com/catch-connect-services/577820df-5f19-43ed-baca-8c0dfcb4eb17-0.0.1-mac.ccs",
+    "armv7": "",
+    "windows": ""
+  },
+  "parameters": [
+    {
+      "parameter": "ipAddress",
+      "friendlyName": "IP Address",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "placeholder": "Enter the IP address or host name.",
+      "tooltip": ""
+    },
+    {
+      "parameter": "port",
+      "friendlyName": "Port",
+      "type": "number",
+      "default": 23,
+      "required": true,
+      "placeholder": "Optional TCP port (defaults to 4998).",
+      "tooltip": ""
+    },
+    {
+      "parameter": "heartbeatInterval",
+      "friendlyName": "Heartbeat Interval",
+      "type": "string",
+      "default": "10000",
+      "required": true,
+      "placeholder": "Enter the heartbeat interval.",
+      "tooltip": "The interval between sending heartbeat messages in milliseconds. The heartbeat is used to detect unexpected disconnects and automatically reconnect."
+    }
+  ],
+  "commands": [
+    {
+      "friendlyName": "Connect",
+      "editable": false,
+      "pattern": "connect",
+      "useHex": false,
+      "endWith": "n",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Connects the socket. This command is sent automatically at startup."
+        }
+      ]
+    },
+    {
+      "friendlyName": "Close",
+      "editable": false,
+      "pattern": "close",
+      "useHex": false,
+      "endWith": "n",
+      "descriptions": [
+        {
+          "title": "Description",
+          "body": "Closes the socket."
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 1 Level",
+      "editable": true,
+      "pattern": "setInputLevel,1,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 2 Level",
+      "editable": true,
+      "pattern": "setInputLevel,2,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 3 Level",
+      "editable": true,
+      "pattern": "setInputLevel,3,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 4 Level",
+      "editable": true,
+      "pattern": "setInputLevel,4,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 5 Level",
+      "editable": true,
+      "pattern": "setInputLevel,5,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 6 Level",
+      "editable": true,
+      "pattern": "setInputLevel,6,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 7 Level",
+      "editable": true,
+      "pattern": "setInputLevel,7,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 8 Level",
+      "editable": true,
+      "pattern": "setInputLevel,8,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 9 Level",
+      "editable": true,
+      "pattern": "setInputLevel,9,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 10 Level",
+      "editable": true,
+      "pattern": "setInputLevel,10,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 11 Level",
+      "editable": true,
+      "pattern": "setInputLevel,11,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 12 Level",
+      "editable": true,
+      "pattern": "setInputLevel,12,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 1 Mute",
+      "editable": true,
+      "pattern": "setInputMute,1,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 2 Mute",
+      "editable": true,
+      "pattern": "setInputMute,2,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 3 Mute",
+      "editable": true,
+      "pattern": "setInputMute,3,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 4 Mute",
+      "editable": true,
+      "pattern": "setInputMute,4,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 5 Mute",
+      "editable": true,
+      "pattern": "setInputMute,5,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 6 Mute",
+      "editable": true,
+      "pattern": "setInputMute,6,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 7 Mute",
+      "editable": true,
+      "pattern": "setInputMute,7,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 8 Mute",
+      "editable": true,
+      "pattern": "setInputMute,8,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 9 Mute",
+      "editable": true,
+      "pattern": "setInputMute,9,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 10 Mute",
+      "editable": true,
+      "pattern": "setInputMute,10,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 11 Mute",
+      "editable": true,
+      "pattern": "setInputMute,11,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Input 12 Mute",
+      "editable": true,
+      "pattern": "setInputMute,12,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 1 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,1,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 2 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,2,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 3 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,3,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 4 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,4,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 5 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,5,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 6 Level",
+      "editable": true,
+      "pattern": "setOutputLevel,6,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 1 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,1,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 2 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,2,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 3 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,3,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 4 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,4,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 5 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,5,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Output 6 Mute",
+      "editable": true,
+      "pattern": "setOutputMute,6,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Master Level",
+      "editable": true,
+      "pattern": "setMasterLevel,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Relay 1",
+      "editable": true,
+      "pattern": "setRelay,1,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Relay 2",
+      "editable": true,
+      "pattern": "setRelay,2,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Relay 3",
+      "editable": true,
+      "pattern": "setRelay,3,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Set Relay 4",
+      "editable": true,
+      "pattern": "setRelay,4,#PAYLOAD#",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 1 Recall",
+      "editable": true,
+      "pattern": "recallPreset,1",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 2 Recall",
+      "editable": true,
+      "pattern": "recallPreset,2",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 3 Recall",
+      "editable": true,
+      "pattern": "recallPreset,3",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 4 Recall",
+      "editable": true,
+      "pattern": "recallPreset,4",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 1 Write",
+      "editable": true,
+      "pattern": "writePreset,1",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 2 Write",
+      "editable": true,
+      "pattern": "writePreset,2",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 3 Write",
+      "editable": true,
+      "pattern": "writePreset,3",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Preset 4 Write",
+      "editable": true,
+      "pattern": "writePreset,4",
+      "useHex": false,
+      "endWith": "",
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    }
+  ],
+  "responses": [
+    {
+      "friendlyName": "Selected Preset",
+      "editable": true,
+      "pattern": "^preset=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 1",
+      "editable": true,
+      "pattern": "^inputLevel,1=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 2",
+      "editable": true,
+      "pattern": "^inputLevel,2=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 3",
+      "editable": true,
+      "pattern": "^inputLevel,3=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 4",
+      "editable": true,
+      "pattern": "^inputLevel,4=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 5",
+      "editable": true,
+      "pattern": "^inputLevel,5=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 6",
+      "editable": true,
+      "pattern": "^inputLevel,6=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 7",
+      "editable": true,
+      "pattern": "^inputLevel,7=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 8",
+      "editable": true,
+      "pattern": "^inputLevel,8=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 9",
+      "editable": true,
+      "pattern": "^inputLevel,9=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 10",
+      "editable": true,
+      "pattern": "^inputLevel,10=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 11",
+      "editable": true,
+      "pattern": "^inputLevel,11=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Level 12",
+      "editable": true,
+      "pattern": "^inputLevel,12=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 1",
+      "editable": true,
+      "pattern": "^inputMute,1=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 2",
+      "editable": true,
+      "pattern": "^inputMute,2=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 3",
+      "editable": true,
+      "pattern": "^inputMute,3=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 4",
+      "editable": true,
+      "pattern": "^inputMute,4=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 5",
+      "editable": true,
+      "pattern": "^inputMute,5=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 6",
+      "editable": true,
+      "pattern": "^inputMute,6=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 7",
+      "editable": true,
+      "pattern": "^inputMute,7=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 8",
+      "editable": true,
+      "pattern": "^inputMute,8=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 9",
+      "editable": true,
+      "pattern": "^inputMute,9=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 10",
+      "editable": true,
+      "pattern": "^inputMute,10=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 11",
+      "editable": true,
+      "pattern": "^inputMute,11=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Input Mute 12",
+      "editable": true,
+      "pattern": "^inputMute,12=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 1",
+      "editable": true,
+      "pattern": "^outputLevel,1=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 2",
+      "editable": true,
+      "pattern": "^outputLevel,2=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 3",
+      "editable": true,
+      "pattern": "^outputLevel,3=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 4",
+      "editable": true,
+      "pattern": "^outputLevel,4=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 5",
+      "editable": true,
+      "pattern": "^outputLevel,5=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 6",
+      "editable": true,
+      "pattern": "^outputLevel,6=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 7",
+      "editable": true,
+      "pattern": "^outputLevel,7=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 8",
+      "editable": true,
+      "pattern": "^outputLevel,8=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 9",
+      "editable": true,
+      "pattern": "^outputLevel,9=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 10",
+      "editable": true,
+      "pattern": "^outputLevel,10=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 11",
+      "editable": true,
+      "pattern": "^outputLevel,11=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Level 12",
+      "editable": true,
+      "pattern": "^outputLevel,12=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 1",
+      "editable": true,
+      "pattern": "^outputMute,1=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 2",
+      "editable": true,
+      "pattern": "^outputMute,2=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 3",
+      "editable": true,
+      "pattern": "^outputMute,3=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 4",
+      "editable": true,
+      "pattern": "^outputMute,4=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 5",
+      "editable": true,
+      "pattern": "^outputMute,5=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 6",
+      "editable": true,
+      "pattern": "^outputMute,6=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 7",
+      "editable": true,
+      "pattern": "^outputMute,7=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 8",
+      "editable": true,
+      "pattern": "^outputMute,8=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 9",
+      "editable": true,
+      "pattern": "^outputMute,9=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 10",
+      "editable": true,
+      "pattern": "^outputMute,10=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 11",
+      "editable": true,
+      "pattern": "^outputMute,11=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Output Mute 12",
+      "editable": true,
+      "pattern": "^outputMute,12=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Master Level",
+      "editable": true,
+      "pattern": "^masterLevel=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Master Mute",
+      "editable": true,
+      "pattern": "^masterMute=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    }
+    {
+      "friendlyName": "Relay 1",
+      "editable": true,
+      "pattern": "^relay,1=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Relay 2",
+      "editable": true,
+      "pattern": "^relay,2=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Relay 3",
+      "editable": true,
+      "pattern": "^relay,3=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "friendlyName": "Relay 4",
+      "editable": true,
+      "pattern": "^relay,4=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ]
+    }
+  ]
+}

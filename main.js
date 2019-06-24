@@ -171,21 +171,6 @@ function processCommand(command) {
       case 'close\n':
         close();
         break;
-      case 'getLevels\n':
-        sendResponse(JSON.stringify({ 'levels': sdaLevels }));
-        break;
-      case 'getRouting\n':
-        sendResponse(JSON.stringify({ 'routing': sdaRouting }));
-        break;
-      case 'getRelays\n':
-        sendResponse(JSON.stringify({ 'relays': sdaRelays }));
-        break;
-      case 'getMutes\n':
-        sendResponse(JSON.stringify({ 'mutes': sdaMuteStates }));
-        break;
-      case 'getPresets\n':
-        sendResponse(JSON.stringify({ 'presets': presets }));
-        break;
       default:
         sendToSocket(command);
         break;
@@ -318,7 +303,7 @@ function parseRelays(bufferArray) {
 
 function parseIoFlags(bufferArray) {
   log('Parsing IO flags.')
-  if (bufferArray.length > 1) {    
+  if (bufferArray.length > 1) {
     for (var i = 1; i < bufferArray.length; i++) {
       if (i < 13) {
         log('Input Mute ' + i + ' = ' + bufferArray[i]);
