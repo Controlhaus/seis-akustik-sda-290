@@ -2,13 +2,32 @@ const argv = require('yargs').argv;
 const repl = require('repl');
 const net = require('net');
 
-var serviceName = argv.serviceName || 'FSR FLEX-LT';
+var serviceName = argv.serviceName || 'Seis Akustik SDA-290';
 var ipAddress = argv.ipAddress;
 var port = argv.port || 23;
+var heartbeatInterval = argv.heartbeatInterval || 10000;
 var client;
+var heartbeat;
 var reconnectTimeout;
 var doNotReconnect;
 var retrying;
+
+var pollCommands = ['gp\n', 'gr\n', 'gl\n', 'gm\n'];
+var pollCommandIndex = 0;
+var polling = false;
+var sentCommand = '';
+var sentCommandAck = false;
+
+var sdaLevels = [];
+var sdaRouting = []
+var sdaRelays = []
+var sdaMuteStates = [];
+var presets = [false, false, false, false];
+var ipAddress;
+var ipMask;
+var ipGateway;
+var macAddress;
+var rxBuffer = '';
 
 /* Startup */
 
@@ -19,7 +38,7 @@ connect();
 repl.start({ prompt: '> ', eval: evaulateCliCommands });
 function evaulateCliCommands(command, context, filename, callback) {
   processCommand(command);
-  callback(null, 'OK');
+  callback(null);
 }
 
 function log(message) {
@@ -40,72 +59,324 @@ function sendResponse(response) {
   }
 }
 
+/* Exit cleanly */
+
+function exitHandler(options, exitCode) {
+  if (options.cleanup) {
+    log('exitHandler cleanup');
+    close();
+  }
+  if (exitCode || exitCode === 0) log('exitHandler exitCode: ' + exitCode);
+  if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null, { cleanup: true }));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+
 /* Create Device Commands */
 
 function processCommand(command) {
-  switch (command) {
-    case 'connect\n':
-      connect();
+  command = command.trim();
+  var commandArray = command.split(',');
+  if (commandArray.length > 1) {
+    switch (commandArray[0]) {
+      case 'setInputLevel':
+        if (commandArray.length === 3) {
+          if (commandArray[2].length === 1) {
+            commandArray[2] = '00' + commandArray[2];
+          } else if (commandArray[2].length === 2) {
+            commandArray[2] = '0' + commandArray[2];
+          }
+          if (commandArray[1] === '10') {
+            commandArray[1] = 'a'
+          } else if (commandArray[1] === '11') {
+            commandArray[1] = 'b'
+          } if (commandArray[1] === '12') {
+            commandArray[1] = 'c'
+          }
+          sendCommandToSocket('mp' + commandArray[1] + '=' + commandArray[2] + '\n');
+        }
+        break;
+      case 'setInputMute':
+        if (commandArray.length === 3) {
+          if (commandArray[1] === '10') {
+            commandArray[1] = 'a'
+          } else if (commandArray[1] === '11') {
+            commandArray[1] = 'b'
+          } if (commandArray[1] === '12') {
+            commandArray[1] = 'c'
+          }
+          sendCommandToSocket('ma' + commandArray[1] + '=' + commandArray[2] + '\n');
+        }
+        break;
+      case 'setOutputLevel':
+        if (commandArray.length === 3) {
+          if (commandArray[2].length === 1) {
+            commandArray[2] = '00' + commandArray[2];
+          } else if (commandArray[2].length === 2) {
+            commandArray[2] = '0' + commandArray[2];
+          }
+          sendCommandToSocket('ap' + commandArray[1] + '=' + commandArray[2] + '\n');
+        }
+        break;
+      case 'setOutputMute':
+        if (commandArray.length === 3) {
+          sendCommandToSocket('aa' + commandArray[1] + '=' + commandArray[2] + '\n');
+        }
+        break;
+      case 'setMasterLevel':
+        if (commandArray.length === 2) {
+          if (commandArray[1].length === 1) {
+            commandArray[1] = '00' + commandArray[1];
+          } else if (commandArray[1].length === 2) {
+            commandArray[1] = '0' + commandArray[1];
+          }
+          sendCommandToSocket('apm=' + commandArray[1] + '\n');
+        }
+        break;
+      case 'setRelay':
+        if (commandArray.length === 3) {
+          sendCommandToSocket('la' + commandArray[1] + '=' + commandArray[2] + '\n');
+        }
+        break;
+      case 'recallPreset':
+        if (commandArray.length === 2) {
+          sendCommandToSocket('pr' + commandArray[1] + '\n');
+        }
+        break;
+      case 'writePreset':
+        if (commandArray.length === 2) {
+          sendCommandToSocket('pw' + commandArray[1] + '\n');
+        }
+        break;
+      // default:
+      //   sendCommandToSocket(command + '\n');
+      // break;
+    }
+  } else {
+    switch (command) {
+      case 'connect\n':
+        connect();
+        break;
+      case 'close\n':
+        close();
+        break;
+      case 'getLevels\n':
+        sendResponse(JSON.stringify({ 'levels': sdaLevels }));
+        break;
+      case 'getRouting\n':
+        sendResponse(JSON.stringify({ 'routing': sdaRouting }));
+        break;
+      case 'getRelays\n':
+        sendResponse(JSON.stringify({ 'relays': sdaRelays }));
+        break;
+      case 'getMutes\n':
+        sendResponse(JSON.stringify({ 'mutes': sdaMuteStates }));
+        break;
+      case 'getPresets\n':
+        sendResponse(JSON.stringify({ 'presets': presets }));
+        break;
+      default:
+        sendToSocket(command);
+        break;
+    }
+  }
+}
+
+function sendCommandToSocket(command) {
+  sentCommand = command;
+  sendToSocket(command);
+}
+
+/* Parse Device Responses */
+function parseResponse(response) {
+  isAlive = true;
+  if (response === sentCommand) {
+    log('Command acknowledged: ' + response);
+    sentCommand = '';
+    sentCommandAck = true;
+    return;
+  }
+  if (response.includes('PRESET')) {
+    parsePreset(response);
+    return;
+  }
+  if (response.includes('LEVEL')) {
+    sendToSocket('gp\n');
+    return;
+  }
+  if (response.includes('RELAIS')) {
+    sendToSocket('gl\n');
+    return;
+  }
+  if (!response.includes('OK')) {
+    rxBuffer = rxBuffer + response;
+    return;
+  }
+  if (response.includes('OK') && rxBuffer.length > 0) {
+    let trimmedResponse = response.trim();
+    //Sometimes the last value and OK are received at the same time.
+    //Other times only OK is received.
+    if (trimmedResponse === 'OK') {
+      rxBuffer = rxBuffer.slice(0, -1);
+      parseRxBuffer(rxBuffer);
+      rxBuffer = '';
+      return;
+    }
+    trimmedResponse = trimmedResponse.replace('OK', '');
+    rxBuffer = rxBuffer + trimmedResponse;
+    rxBuffer = rxBuffer.slice(0, -1);
+    parseRxBuffer(rxBuffer);
+    rxBuffer = '';
+    return;
+  }
+  if (response.includes('OK') && sentCommandAck === true) {
+    sentCommandAck = false;
+    rxBuffer = '';
+    startPolling();
+  }
+}
+
+function parseRxBuffer(buffer) {
+  let bufferArray = buffer.split('\n');
+  switch (bufferArray[0]) {
+    case 'gp':
+      parseLevels(bufferArray);
       break;
-    case 'close\n':
-      close();
+    case 'gr':
+      parseRouting(bufferArray);
       break;
-    case 'beep\n':
-      sendToSocket('action = BEEP\r');
+    case 'gl':
+      parseRelays(bufferArray);
       break;
-    case 'pulseIo1\n':
-      sendToSocket('action = IO 1 pulse\r');
+    case 'gm':
+      parseIoFlags(bufferArray);
       break;
-    case 'pulseIo2\n':
-      sendToSocket('action = IO 2 pulse\r');
-      break;
-    case 'pulseIo3\n':
-      sendToSocket('action = IO 3 pulse\r');
-      break;
-    case 'pulseIo4\n':
-      sendToSocket('action = IO 4 pulse\r');
-      break;
-    case 'openIo1\n':
-      sendToSocket('action = IO 1 open\r');
-      break;
-    case 'openIo2\n':
-      sendToSocket('action = IO 2 open\r');
-      break;
-    case 'openIo3\n':
-      sendToSocket('action = IO 3 open\r');
-      break;
-    case 'openIo4\n':
-      sendToSocket('action = IO 4 open\r');
-      break;
-    case 'closeIo1\n':
-      sendToSocket('action = IO 1 close\r');
-      break;
-    case 'closeIo2\n':
-      sendToSocket('action = IO 2 close\r');
-      break;
-    case 'closeIo3\n':
-      sendToSocket('action = IO 3 close\r');
-      break;
-    case 'closeIo4\n':
-      sendToSocket('action = IO 4 close\r');
-      break;
-    default:
-      sendToSocket(command);
+    case 'help':
+      parseHelp(bufferArray);
       break;
   }
 }
 
-/* Parse Device Responses */
+function parsePreset(buffer) {
+  log('Parsing preset.')
+  let preset = parseString(buffer, 'PRESET ');
+  log('Active Preset: ' + preset);
+  sendResponse('preset=' + preset);
+}
 
-function parseResponse(response) {
-  sendResponse(response);
+function parseLevels(bufferArray) {
+  log('Parsing levels.')
+  if (bufferArray.length > 1) {
+    for (var i = 1; i < bufferArray.length; i++) {
+      if (i < 13) {
+        log('Input Level ' + i + ' = ' + bufferArray[i]);
+        sendResponse('inputLevel' + i + '=' + bufferArray[i]);
+      } else if (i < 19) {
+        log('Output Level ' + (i - 12) + ' = ' + bufferArray[i]);
+        sendResponse('outputLevel' + i + '=' + bufferArray[i]);
+      } else {
+        log('Master Level = ' + bufferArray[i]);
+        sendResponse('masterLevel=' + bufferArray[i]);
+      }
+    }
+    checkPolling();
+  }
+}
+
+function parseRouting(bufferArray) {
+  log('Parsing routing.')
+  if (bufferArray.length > 1) {
+    for (var i = 1; i < bufferArray.length; i++) {
+      log('Route ' + i + ' = ' + bufferArray[i]);
+      // sendResponse('route' + i + '=' + bufferArray[i]);
+    }
+    checkPolling();
+  }
+}
+
+function parseRelays(bufferArray) {
+  log('Parsing relays.')
+  if (bufferArray.length > 1) {
+    for (var i = 1; i < bufferArray.length; i++) {
+      log('Relay ' + i + ' = ' + bufferArray[i]);
+      sendResponse('relay' + i + '=' + bufferArray[i]);
+    }
+    checkPolling();
+  }
+}
+
+function parseIoFlags(bufferArray) {
+  log('Parsing IO flags.')
+  if (bufferArray.length > 1) {    
+    for (var i = 1; i < bufferArray.length; i++) {
+      if (i < 13) {
+        log('Input Mute ' + i + ' = ' + bufferArray[i]);
+        sendResponse('inputMute' + i + '=' + bufferArray[i]);
+      } else if (i < 19) {
+        log('Output Mute ' + (i - 12) + ' = ' + bufferArray[i]);
+        sendResponse('outputMute' + (i - 12) + '=' + bufferArray[i]);
+      } else {
+        log('Master Mute = ' + bufferArray[i]);
+        sendResponse('masterMute' + i + '=' + bufferArray[i]);
+      }
+
+    }
+    checkPolling();
+  }
+}
+
+function parseHelp(bufferArray) {
+  log('Parsing help.')
+  if (bufferArray.length > 1) {
+    for (var i = 1; i < bufferArray.length; i++) {
+      if (bufferArray[i].includes('IP-Adresse')) {
+        ipAddress = parseString(bufferArray[i], 'IP-Adresse: ');
+        log('ipAddress: ' + ipAddress);
+        // sendResponse('ipAddress=' + ipAddress);
+      }
+      else if (bufferArray[i].includes('IP-Maske')) {
+        ipMask = parseString(bufferArray[i], 'IP-Maske: ');
+        log('ipMask: ' + ipMask);
+        // sendResponse('ipMask=' + ipMask);
+      }
+      else if (bufferArray[i].includes('IP-Gateway')) {
+        ipGateway = parseString(bufferArray[i], 'IP-Gateway: ');
+        log('ipGateway: ' + ipGateway);
+        // sendResponse('ipGateway=' + ipGateway);
+      }
+      else if (bufferArray[i].includes('MAC-Adresse')) {
+        macAddress = parseString(bufferArray[i], 'MAC-Adresse: ');
+        log('macAddress: ' + macAddress);
+        // sendResponse('macAddress=' + macAddress);
+      }
+    }
+  }
+}
+
+function parseString(string, searchString) {
+  let startIndex = string.indexOf(searchString);
+  startIndex = startIndex + searchString.length;
+  let result = string.substring(startIndex, string.length);
+  result = result.trim();
+  return result;
 }
 
 /* Socket Functions */
 
 function sendToSocket(message) {
   if (client) {
-    log('Sending to socket: ' + message);
+    // log('Sending to socket: ' + message);
     client.write(message);
   } else {
     log('Cannot send to undefined socket.');
@@ -119,9 +390,9 @@ function connect() {
     client.connect(port, ipAddress);
 
     client.on('data', (data) => {
-      const msg = data.toString();
+      let msg = data.toString();
+      //log('Received from socket: ' + msg);
       parseResponse(msg);
-      log('Received from socket: ' + msg);
     });
 
     client.on('connect', connectEventHandler.bind(this));
@@ -137,6 +408,7 @@ function connect() {
 
 function close() {
   if (client) {
+    log('Closing socket.');
     if (reconnectTimeout) {
       clearTimeout(reconnectTimeout);
     }
@@ -147,6 +419,27 @@ function close() {
   }
 }
 
+function startPolling() {
+  if (polling === false) {
+    pollCommandIndex = 0;
+    polling = true;
+    sendToSocket(pollCommands[0]);
+  }
+}
+
+function checkPolling() {
+  // log('Checking polling with index: ' + pollCommandIndex);
+  if (pollCommandIndex != null) {
+    if (pollCommandIndex < pollCommands.length - 1) {
+      pollCommandIndex++;
+      sendToSocket(pollCommands[pollCommandIndex]);
+    } else {
+      pollCommandIndex = null;
+      polling = false;
+    }
+  }
+}
+
 /* Socket Event Handlers */
 
 function connectEventHandler() {
@@ -154,6 +447,26 @@ function connectEventHandler() {
   sendResponse('catch-service-connected');
   retrying = false;
   client.setKeepAlive(true);
+  startPolling();
+  startHearbeat();
+}
+
+function startHearbeat() {
+  isAlive = true;
+  heartbeat = setInterval(checkHeartbeat, heartbeatInterval);
+}
+
+function checkHeartbeat() {
+  if (isAlive === true) {
+    if (polling === false) {
+      isAlive = false;
+      sendToSocket('help\n');
+    }
+    return;
+  }
+  log('Heartbeat timed out.');
+  doNotReconnect = false;
+  client.destroy();
 }
 
 function endEventHandler() {
@@ -175,6 +488,12 @@ function errorEventHandler(err) {
 }
 
 function closeEventHandler() {
+  if (heartbeat) {
+    clearInterval(heartbeat);
+  }
+  if (reconnectTimeout) {
+    clearInterval(reconnectTimeout);
+  }
   sendResponse('catch-service-disconnected');
   log('Socket closed.');
   if (!retrying && !doNotReconnect) {

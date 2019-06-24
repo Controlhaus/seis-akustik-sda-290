@@ -1,7 +1,7 @@
 {
-  "name": "fsr-flex-lt",
+  "name": "seis-akustik-sda-290",
   "version": "0.1.0",
-  "description": "Controls FSR FLEX-LT via TCP.",
+  "description": "Controls Seis Akustik SDA-290.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
   "author": "Patrick Murray",
   "license": "MIT",
   "dependencies": {
+    "serialport": "^7.1.4",
     "yargs": "^12.0.5"
   }
 }
