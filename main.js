@@ -256,6 +256,7 @@ function parseRxBuffer(buffer) {
 function parsePreset(buffer) {
   log('Parsing preset.')
   let preset = parseString(buffer, 'PRESET ');
+  preset = preset.trim();
   log('Active Preset: ' + preset);
   sendResponse('preset=' + preset);
 }
@@ -264,12 +265,13 @@ function parseLevels(bufferArray) {
   log('Parsing levels.')
   if (bufferArray.length > 1) {
     for (var i = 1; i < bufferArray.length; i++) {
+      bufferArray[i] = bufferArray[i].trim();
       if (i < 13) {
         log('Input Level ' + i + ' = ' + bufferArray[i]);
-        sendResponse('inputLevel' + i + '=' + bufferArray[i]);
+        sendResponse('inputLevel,' + i + '=' + bufferArray[i]);
       } else if (i < 19) {
         log('Output Level ' + (i - 12) + ' = ' + bufferArray[i]);
-        sendResponse('outputLevel' + i + '=' + bufferArray[i]);
+        sendResponse('outputLevel,' + i + '=' + bufferArray[i]);
       } else {
         log('Master Level = ' + bufferArray[i]);
         sendResponse('masterLevel=' + bufferArray[i]);
@@ -284,7 +286,8 @@ function parseRouting(bufferArray) {
   if (bufferArray.length > 1) {
     for (var i = 1; i < bufferArray.length; i++) {
       log('Route ' + i + ' = ' + bufferArray[i]);
-      // sendResponse('route' + i + '=' + bufferArray[i]);
+      // bufferArray[i] = bufferArray[i].trim();
+      // sendResponse('route,' + i + '=' + bufferArray[i]);
     }
     checkPolling();
   }
@@ -294,8 +297,9 @@ function parseRelays(bufferArray) {
   log('Parsing relays.')
   if (bufferArray.length > 1) {
     for (var i = 1; i < bufferArray.length; i++) {
+      bufferArray[i] = bufferArray[i].trim();
       log('Relay ' + i + ' = ' + bufferArray[i]);
-      sendResponse('relay' + i + '=' + bufferArray[i]);
+      sendResponse('relay,' + i + '=' + bufferArray[i]);
     }
     checkPolling();
   }
@@ -306,14 +310,17 @@ function parseIoFlags(bufferArray) {
   if (bufferArray.length > 1) {
     for (var i = 1; i < bufferArray.length; i++) {
       if (i < 13) {
+        bufferArray[i] = bufferArray[i].trim();
         log('Input Mute ' + i + ' = ' + bufferArray[i]);
-        sendResponse('inputMute' + i + '=' + bufferArray[i]);
+        sendResponse('inputMute,' + i + '=' + bufferArray[i]);
       } else if (i < 19) {
+        bufferArray[i] = bufferArray[i].trim();
         log('Output Mute ' + (i - 12) + ' = ' + bufferArray[i]);
-        sendResponse('outputMute' + (i - 12) + '=' + bufferArray[i]);
+        sendResponse('outputMute,' + (i - 12) + '=' + bufferArray[i]);
       } else {
+        bufferArray[i] = bufferArray[i].trim();
         log('Master Mute = ' + bufferArray[i]);
-        sendResponse('masterMute' + i + '=' + bufferArray[i]);
+        sendResponse('masterMute=' + bufferArray[i]);
       }
 
     }
@@ -327,21 +334,25 @@ function parseHelp(bufferArray) {
     for (var i = 1; i < bufferArray.length; i++) {
       if (bufferArray[i].includes('IP-Adresse')) {
         ipAddress = parseString(bufferArray[i], 'IP-Adresse: ');
+        ipAddress = ipAddress.trim();
         log('ipAddress: ' + ipAddress);
         // sendResponse('ipAddress=' + ipAddress);
       }
       else if (bufferArray[i].includes('IP-Maske')) {
         ipMask = parseString(bufferArray[i], 'IP-Maske: ');
+        ipMask = ipMask.trim();
         log('ipMask: ' + ipMask);
         // sendResponse('ipMask=' + ipMask);
       }
       else if (bufferArray[i].includes('IP-Gateway')) {
         ipGateway = parseString(bufferArray[i], 'IP-Gateway: ');
+        ipGateway = ipGateway.trim();
         log('ipGateway: ' + ipGateway);
         // sendResponse('ipGateway=' + ipGateway);
       }
       else if (bufferArray[i].includes('MAC-Adresse')) {
         macAddress = parseString(bufferArray[i], 'MAC-Adresse: ');
+        macAddress = macAddress.trim();
         log('macAddress: ' + macAddress);
         // sendResponse('macAddress=' + macAddress);
       }
