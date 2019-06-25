@@ -4,6 +4,8 @@
 /tmp
 /out-tsc
 /dist
+*.ccs
+*.exe
 
 # pkg builds
 main-linux
