@@ -853,6 +853,22 @@
   ],
   "responses": [
     {
+      "friendlyName": "Preset Selected",
+      "editable": true,
+      "pattern": "^preset=(.+)$",
+      "useHex": false,
+      "useRegularExpression": true,
+      "descriptions": [
+        {
+          "title": "",
+          "body": ""
+        }
+      ],
+      "tags": [
+        "preset recalled"
+      ]
+    },
+    {
       "friendlyName": "Preset 1 Selected",
       "editable": true,
       "pattern": "preset=1",

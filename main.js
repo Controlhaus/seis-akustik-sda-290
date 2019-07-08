@@ -6,6 +6,7 @@ var serviceName = argv.serviceName || 'Seis Akustik SDA-290';
 var ipAddress = argv.ipAddress;
 var port = argv.port || 23;
 var heartbeatInterval = argv.heartbeatInterval || 10000;
+var debug = argv.debug || false;
 var client;
 var heartbeat;
 var reconnectTimeout;
@@ -18,11 +19,6 @@ var polling = false;
 var sentCommand = '';
 var sentCommandAck = false;
 
-var sdaLevels = [];
-var sdaRouting = []
-var sdaRelays = []
-var sdaMuteStates = [];
-var presets = [false, false, false, false];
 var ipAddress;
 var ipMask;
 var ipGateway;
@@ -42,7 +38,9 @@ function evaulateCliCommands(command, context, filename, callback) {
 }
 
 function log(message) {
-  console.log(serviceName + ': ' + message);
+  if (debug) {
+    console.log(serviceName + ': ' + message);
+  }
 }
 
 /* Catch Connect Client Messages */
@@ -190,6 +188,8 @@ function parseResponse(response) {
     log('Command acknowledged: ' + response);
     sentCommand = '';
     sentCommandAck = true;
+    //parse for preset recall. The SDA does not inform of preset changes that we made.
+    //reponse = response.replace('pr', 'PRESET ');
     return;
   }
   if (response.includes('PRESET')) {
