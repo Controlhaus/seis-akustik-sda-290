@@ -105,6 +105,8 @@ function processCommand(command) {
             commandArray[1] = 'c'
           }
           sendCommandToSocket('mp' + commandArray[1] + '=' + commandArray[2] + '\n');
+          log('Input Level ' + commandArray[1] + ' = ' + commandArray[2]);
+          sendResponse('inputLevel,' + commandArray[1] + '=' + commandArray[2]);
         }
         break;
       case 'setInputMute':
@@ -117,6 +119,8 @@ function processCommand(command) {
             commandArray[1] = 'c'
           }
           sendCommandToSocket('ma' + commandArray[1] + '=' + commandArray[2] + '\n');
+          log('Input Mute ' + commandArray[1] + ' = ' + commandArray[2]);
+          sendResponse('inputMute,' + commandArray[1] + '=' + commandArray[2]);
         }
         break;
       case 'setOutputLevel':
@@ -127,11 +131,16 @@ function processCommand(command) {
             commandArray[2] = '0' + commandArray[2];
           }
           sendCommandToSocket('ap' + commandArray[1] + '=' + commandArray[2] + '\n');
+          log('Output Level ' + commandArray[1] + ' = ' + commandArray[2]);
+          sendResponse('outputLevel,' + commandArray[1] + '=' + commandArray[2]);
+
         }
         break;
       case 'setOutputMute':
         if (commandArray.length === 3) {
           sendCommandToSocket('aa' + commandArray[1] + '=' + commandArray[2] + '\n');
+          log('Output Mute ' + commandArray[1] + ' = ' + commandArray[2]);
+          sendResponse('outputMute,' + commandArray[1] + '=' + commandArray[2]);
         }
         break;
       case 'setMasterLevel':
@@ -142,16 +151,27 @@ function processCommand(command) {
             commandArray[1] = '0' + commandArray[1];
           }
           sendCommandToSocket('apm=' + commandArray[1] + '\n');
+          log('Master Level = ' + commandArray[1]);
+          sendResponse('masterLevel=' + commandArray[1]);
         }
         break;
+      // case 'setMasterMute': // Not available from API
+      //   sendCommandToSocket();
+      //   log('Master Mute = ' + commandArray[i]);
+      //   sendResponse('masterMute=' + commandArray[i]);
+      //   break;
       case 'setRelay':
         if (commandArray.length === 3) {
           sendCommandToSocket('la' + commandArray[1] + '=' + commandArray[2] + '\n');
+          log('Relay ' + commandArray[1] + ' = ' + commandArray[2]);
+          sendResponse('relay,' + commandArray[1] + '=' + commandArray[2]);    
         }
         break;
       case 'recallPreset':
         if (commandArray.length === 2) {
           sendCommandToSocket('pr' + commandArray[1] + '\n');
+          log('Active Preset: ' + commandArray[1]);
+          sendResponse('preset=' + commandArray[1]);
         }
         break;
       case 'writePreset':
@@ -191,13 +211,6 @@ function parseResponse(response) {
     log('Command acknowledged: ' + response);
     sentCommand = '';
     sentCommandAck = true;
-    // There is no command to get the last selected preset.
-    // We assume if our preset command is ACK'd, the preset was selected.
-    if (response.includes('pr')) {
-      response = response.trim();
-      response = response.replace('pr', 'PRESET ');
-      parsePreset(response);
-    }
     return;
   }
   // Parse front panel preset changes.
@@ -238,12 +251,13 @@ function parseResponse(response) {
     rxBuffer = '';
     return;
   }
-  // Poll all values.
-  if (response.includes('OK') && sentCommandAck === true) {
-    sentCommandAck = false;
-    rxBuffer = '';
-    startPolling();
-  }
+  // Poll all values on every change.
+  // This was causing larger systems to lag. Changed to update values from incoming commands.
+  // if (response.includes('OK') && sentCommandAck === true) {
+  //   sentCommandAck = false;
+  //   rxBuffer = '';
+  //   startPolling();
+  // }
 }
 
 function parseRxBuffer(buffer) {
