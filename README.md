@@ -12,6 +12,7 @@ Controls Seis Akustik SDA-290 via TCP.
 - ```ipAddress``` The host address or url to connect to.
 - ```port``` The tcp port to connect to. Default: ```23```
 - ```heartbeatInterval``` The interval between sending heartbeat messages in milliseconds. The heartbeat is used to detect unexpected disconnects and automatically reconnect. Default: ```10000```
+- ```debug``` Set to `true` to print debug statements to the console. Default is false.
 
 ## CLI Commands
 The following commands are available from the command line:  

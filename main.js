@@ -50,6 +50,7 @@ process.on("message", (data) => {
 });
 
 function sendResponse(response) {
+  log('Sending response to parent...');
   log(response);
   //process.send only exists if the app is started as a child process
   if (typeof process.send === 'function') {
@@ -84,6 +85,7 @@ process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
 /* Create Device Commands */
 
 function processCommand(command) {
+  log('Processing Command: ' + command);
   command = command.trim();
   var commandArray = command.split(',');
   if (commandArray.length > 1) {
@@ -177,6 +179,7 @@ function processCommand(command) {
 }
 
 function sendCommandToSocket(command) {
+  log('Sending to socket: ' + command);
   sentCommand = command;
   sendToSocket(command);
 }
@@ -188,26 +191,36 @@ function parseResponse(response) {
     log('Command acknowledged: ' + response);
     sentCommand = '';
     sentCommandAck = true;
-    //parse for preset recall. The SDA does not inform of preset changes that we made.
-    //reponse = response.replace('pr', 'PRESET ');
+    // There is no command to get the last selected preset.
+    // We assume if our preset command is ACK'd, the preset was selected.
+    if (response.includes('pr')) {
+      response = response.trim();
+      response = response.replace('pr', 'PRESET ');
+      parsePreset(response);
+    }
     return;
   }
+  // Parse front panel preset changes.
   if (response.includes('PRESET')) {
     parsePreset(response);
     return;
   }
+  // Parse front panel level changes.
   if (response.includes('LEVEL')) {
     sendToSocket('gp\n');
     return;
   }
+  // Parse front panel relay changes.
   if (response.includes('RELAIS')) {
     sendToSocket('gl\n');
     return;
   }
+  // Append to rx buffer is message is incomplete.
   if (!response.includes('OK')) {
     rxBuffer = rxBuffer + response;
     return;
   }
+  // Parse buffer when message is complete.
   if (response.includes('OK') && rxBuffer.length > 0) {
     let trimmedResponse = response.trim();
     //Sometimes the last value and OK are received at the same time.
@@ -225,6 +238,7 @@ function parseResponse(response) {
     rxBuffer = '';
     return;
   }
+  // Poll all values.
   if (response.includes('OK') && sentCommandAck === true) {
     sentCommandAck = false;
     rxBuffer = '';
@@ -254,7 +268,7 @@ function parseRxBuffer(buffer) {
 }
 
 function parsePreset(buffer) {
-  log('Parsing preset.')
+  log('Parsing preset with buffer: ' + buffer);
   let preset = parseString(buffer, 'PRESET ');
   preset = preset.trim();
   log('Active Preset: ' + preset);
@@ -387,7 +401,7 @@ function connect() {
 
     client.on('data', (data) => {
       let msg = data.toString();
-      //log('Received from socket: ' + msg);
+      log('Received from socket: ' + msg);
       parseResponse(msg);
     });
 
